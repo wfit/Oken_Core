@@ -1,5 +1,5 @@
-local _, FS = ...
-local Misc = FS:RegisterModule("Miscellaneous")
+local _, WFI = ...
+local Misc = WFI:RegisterModule("Miscellaneous")
 
 local features = {}
 
@@ -30,9 +30,9 @@ local misc_config = {
 -- Life-cycle
 -------------------------------------------------------------------------------
 function Misc:OnInitialize()
-	self.db = FS.db:RegisterNamespace("Miscellaneous", misc_defaults)
+	self.db = WFI.db:RegisterNamespace("Miscellaneous", misc_defaults)
 	self.settings = self.db.profile
-	FS.Config:Register("Miscellaneous", misc_config, 12)
+	WFI.Config:Register("Miscellaneous", misc_config, 12)
 
 	self:RegisterEvent("ADDON_LOADED")
 end
@@ -103,7 +103,7 @@ do
 		function(state)
 			if state and not enabled then
 				enabled = true
-				FS.Console:RegisterChatCommand("rl", function() ReloadUI() end)
+				WFI.Console:RegisterChatCommand("rl", function() ReloadUI() end)
 			end
 		end)
 end

@@ -1,6 +1,6 @@
-local _, FS = ...
+local _, WFI = ...
 
-function FS:Round(val, decimal)
+function WFI:Round(val, decimal)
 	if decimal then
 		return math.floor( (val * 10^decimal) + 0.5) / (10^decimal)
 	else
@@ -8,7 +8,7 @@ function FS:Round(val, decimal)
 	end
 end
 
-function FS:ShortenNumber(value, decimal)
+function WFI:ShortenNumber(value, decimal)
 	if not value then return end
 	if(value > 999999999) then return self:Round(value/1000000000, decimal), "B" end
 	if(value > 999999) then return self:Round(value/1000000, decimal), "M" end
@@ -16,12 +16,12 @@ function FS:ShortenNumber(value, decimal)
 	return value, ""
 end
 
-function FS:FormatNumber(value, decimal, pattern)
+function WFI:FormatNumber(value, decimal, pattern)
 	if not value then return end
 	return (pattern or "%s%s"):format(self:ShortenNumber(value, decimal))
 end
 
-function FS:GetClassColor(unit, components)
+function WFI:GetClassColor(unit, components)
 	local target_class = select(2, UnitClass(unit))
 	if target_class then
 		if components then
@@ -40,12 +40,12 @@ function FS:GetClassColor(unit, components)
 end
 
 local icn_string = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_%d:%s|t"
-function FS:Icon(index, align)
+function WFI:Icon(index, align)
 	if not index then return "" end
 	return icn_string:format(index, align or "0")
 end
 
-function FS:Wrap(str, length)
+function WFI:Wrap(str, length)
 	local wrapped = ""
 	while true do
 		local a, b = str:match("(" .. ("."):rep(length) .. ")(.*)")

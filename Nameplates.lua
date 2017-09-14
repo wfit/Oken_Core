@@ -1,18 +1,18 @@
-local _, FS = ...
-local Nameplates = FS:RegisterModule("Nameplates", "AceTimer-3.0")
-FS.Hud = Nameplates
+local _, WFI = ...
+local Nameplates = WFI:RegisterModule("Nameplates", "AceTimer-3.0")
+WFI.Hud = Nameplates
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
 local pi2, pi_2 = math.pi * 2, math.pi / 2
 local inf = math.huge
 
-local hud = CreateFrame("Frame", "FSNameplateHUD", UIParent)
+local hud = CreateFrame("Frame", "WFINameplateHUD", UIParent)
 hud:SetFrameStrata("BACKGROUND")
 hud:SetAllPoints()
 hud:Hide()
 
-local fakePlayerPlate = CreateFrame("Frame", "FSNameplatePlayerFake", hud)
+local fakePlayerPlate = CreateFrame("Frame", "WFINameplatePlayerFake", hud)
 fakePlayerPlate:SetWidth(10)
 fakePlayerPlate:SetHeight(10)
 fakePlayerPlate:SetPoint("BOTTOM", hud, "CENTER", 0, 0)
@@ -105,9 +105,9 @@ local nameplates_config = {
 -------------------------------------------------------------------------------
 
 function Nameplates:OnInitialize()
-	self.db = FS.db:RegisterNamespace("Nameplates", nameplates_defaults)
+	self.db = WFI.db:RegisterNamespace("Nameplates", nameplates_defaults)
 	self.settings = self.db.profile
-	FS.Config:Register("Nameplates HUD", nameplates_config)
+	WFI.Config:Register("Nameplates HUD", nameplates_config)
 
 	--C_NamePlate.SetNamePlateFriendlyClickThrough(self.settings.clickthrough)
 
@@ -278,7 +278,7 @@ end
 -------------------------------------------------------------------------------
 
 local function setup_aura_tracking(self, guid, aura, buff)
-	local unit = UnitExists(guid) and guid or FS.Roster:GetUnit(guid)
+	local unit = UnitExists(guid) and guid or WFI.Roster:GetUnit(guid)
 	if not unit then
 		error("Cannot find unit " .. guid .. " for aura-tracking HUD object")
 	end
@@ -560,17 +560,17 @@ end
 
 -- Draw a radius circle
 function Nameplates:DrawRadius(guid, radius)
-	return self:DrawCircle(guid, radius, radius < 15 and "Interface\\AddOns\\FS_Core\\media\\radius_lg" or "Interface\\AddOns\\FS_Core\\media\\radius")
+	return self:DrawCircle(guid, radius, radius < 15 and "Interface\\AddOns\\WFI_Core\\media\\radius_lg" or "Interface\\AddOns\\WFI_Core\\media\\radius")
 end
 
 -- Area of Effect
 function Nameplates:DrawArea(guid, radius)
-	return self:DrawCircle(guid, radius, "Interface\\AddOns\\FS_Core\\media\\radar_circle")
+	return self:DrawCircle(guid, radius, "Interface\\AddOns\\WFI_Core\\media\\radar_circle")
 end
 
 -- Target reticle
 function Nameplates:DrawTarget(guid, radius)
-	local target = self:DrawCircle(guid, radius, "Interface\\AddOns\\FS_Core\\media\\alert_circle")
+	local target = self:DrawCircle(guid, radius, "Interface\\AddOns\\WFI_Core\\media\\alert_circle")
 	function target:Rotate()
 		return GetTime() * 1.5
 	end
@@ -579,7 +579,7 @@ end
 
 -- Clock
 function Nameplates:DrawClock(guid, radius, duration, buff)
-	local clock = self:DrawCircle(guid, radius, "Interface\\AddOns\\FS_Core\\media\\timer")
+	local clock = self:DrawCircle(guid, radius, "Interface\\AddOns\\WFI_Core\\media\\timer")
 
 	-- Timer informations
 	local done = false
@@ -708,7 +708,7 @@ do
 		if #spinner_pool > 0 then
 			spinner = table.remove(spinner_pool)
 		else
-			spinner = FS.Util.Spinner.Create()
+			spinner = WFI.Util.Spinner.Create()
 		end
 		spinner.frame:SetParent(anchor.frame)
 		spinner.frame:SetPoint("CENTER", anchor.frame, "CENTER")
@@ -729,7 +729,7 @@ do
 		local smoothing = false
 
 		local size = radius * 2.3 -- To match DrawCircle radius
-		spinner:SetTexture("Interface\\AddOns\\FS_Core\\media\\ring512")
+		spinner:SetTexture("Interface\\AddOns\\WFI_Core\\media\\ring512")
 		spinner:SetSize(size, size)
 		spinner:SetBlendMode("ADD")
 		spinner:Color(0.8, 0.8, 0.8, 0.8)

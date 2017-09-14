@@ -1,5 +1,5 @@
-local _, FS = ...
-local Token = FS:RegisterModule("Token", "AceTimer-3.0")
+local _, WFI = ...
+local Token = WFI:RegisterModule("Token", "AceTimer-3.0")
 local Network, Console, Roster
 
 -- Aliases
@@ -35,7 +35,7 @@ local K_GUID = "g"
 
 local id = {
 	[K_NETSTATUS] = true,
-	[K_DEV] = FS.version == "dev",
+	[K_DEV] = WFI.version == "dev",
 	[K_LOADTIME] = 0,
 	[K_GUID] = "?"
 }
@@ -137,34 +137,34 @@ local token_config = {
 		name = "Module reference",
 		order = 1000
 	},
-	cmds = FS.Config:MakeDoc("Available chat commands", 1900, {
+	cmds = WFI.Config:MakeDoc("Available chat commands", 1900, {
 		{"token", "List active tokens state and owner."},
-	}, "/fs "),
-	docs = FS.Config:MakeDoc("Public API", 2000, {
+	}, "/wfi "),
+	docs = WFI.Config:MakeDoc("Public API", 2000, {
 		{":Create ( name , default ) -> token", "Creates a new service token with the given name. At any given time, only one player in the group can hold a token with a given name."},
-	}, "FS.Token"),
-	token = FS.Config:MakeDoc("Token API", 3000, {
+	}, "WFI.Token"),
+	token = WFI.Config:MakeDoc("Token API", 3000, {
 		{":Enable ( )", "Enable this token and participate in the holder election process."},
 		{":Disable ( )", "Disable this token. The player will no longer participate in the holder election process and will release the token if currently owning the token."},
 		{":IsMine ( ) -> boolean", "Returns true if the player is currently the token holder."},
 		{":Owner ( ) -> guid , name", "Returns the GUID and name of the current token holder."},
 	}, "token"),
-	events = FS.Config:MakeDoc("Emitted events", 4000, {
+	events = WFI.Config:MakeDoc("Emitted events", 4000, {
 		{"_ACQUIRED ( name , token )", "Emitted when a new holder is elected for the token."},
 		{"_WON ( name , token )", "Emitted when the player is now the holder of a token."},
 		{"_LOST ( name , token )", "Emitted when the player is no longer the holder of a token."},
-	}, "FS_TOKEN")
+	}, "WFI_TOKEN")
 }
 
 --------------------------------------------------------------------------------
 
 function Token:OnInitialize()
-	Network = FS.Network
-	Roster = FS.Roster
-	Console = FS.Console
+	Network = WFI.Network
+	Roster = WFI.Roster
+	Console = WFI.Console
 
 	Console:RegisterCommand("token", self)
-	FS.Config:Register("Service token", token_config)
+	WFI.Config:Register("Service token", token_config)
 end
 
 function Token:OnEnable()
@@ -177,7 +177,7 @@ function Token:OnEnable()
 	id[K_LOADTIME] = GetServerTime()
 
 	-- Bind token network messages
-	self:RegisterMessage("FS_MSG_TKN2")
+	self:RegisterMessage("WFI_MSG_TKN2")
 
 	-- Check group composition change
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", "UpdateAcquirable")
@@ -370,7 +370,7 @@ end
 --------------------------------------------------------------------------------
 
 -- Received a token-related network message
-function Token:FS_MSG_TKN2(_, data, channel, sender)
+function Token:WFI_MSG_TKN2(_, data, channel, sender)
 	local senderid = data[MSG_SENDERID]
 	if not senderid then return end
 
@@ -382,7 +382,7 @@ function Token:FS_MSG_TKN2(_, data, channel, sender)
 		-- Iterate for each message
 		for _, item in ipairs(data[MSG_PACKED]) do
 			item[MSG_SENDERID] = senderid
-			self:FS_MSG_TKN2(nil, item, channel, sender)
+			self:WFI_MSG_TKN2(nil, item, channel, sender)
 		end
 
 	-- Search request on token init
@@ -541,7 +541,7 @@ function TokenObj:Disable(unavailable, no_release)
 		end
 
 		if self:IsMine() then
-			Token:SendMessage("FS_TOKEN_LOST", self.name, self)
+			Token:SendMessage("WFI_TOKEN_LOST", self.name, self)
 		end
 
 		-- Update state
@@ -634,9 +634,9 @@ function TokenObj:SetOwner(ownerid, name)
 	self.ping = GetTime()
 
 	if ownerid[K_GUID] ~= self.last_owner then
-		if was_mine then Token:SendMessage("FS_TOKEN_LOST", self.name, self) end
-		Token:SendMessage("FS_TOKEN_ACQUIRED", self.name, self)
-		if is_mine then Token:SendMessage("FS_TOKEN_WON", self.name, self) end
+		if was_mine then Token:SendMessage("WFI_TOKEN_LOST", self.name, self) end
+		Token:SendMessage("WFI_TOKEN_ACQUIRED", self.name, self)
+		if is_mine then Token:SendMessage("WFI_TOKEN_WON", self.name, self) end
 	end
 
 	trace("#", self.name, "owner set to", name)

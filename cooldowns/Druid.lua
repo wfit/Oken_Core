@@ -1,5 +1,5 @@
-local _, FS = ...
-local Cooldowns = FS:GetModule("Cooldowns")
+local _, WFI = ...
+local Cooldowns = WFI:GetModule("Cooldowns")
 
 local SPEC_BALANCE = 102
 local SPEC_FERAL = 103

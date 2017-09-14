@@ -1,6 +1,6 @@
-local _, FS = ...
+local _, WFI = ...
 
-local Operator = FS.Util.Operator
+local Operator = WFI.Util.Operator
 
 -- Stream methods
 local Stream = {}
@@ -32,7 +32,7 @@ end
 -- Generators
 -------------------------------------------------------------------------------
 
-function FS.Util.Stream(gen, param, state)
+function WFI.Util.Stream(gen, param, state)
 	local tpe = type(gen)
 	if tpe == "function" then
 		return stream(gen, param, state)
@@ -45,7 +45,7 @@ function FS.Util.Stream(gen, param, state)
 	end
 end
 
-function FS.Util.Generate(generator, state, ...)
+function WFI.Util.Generate(generator, state, ...)
 	if type(generator) == "function" then
 		local first = state ~= nil
 
@@ -72,7 +72,7 @@ function FS.Util.Generate(generator, state, ...)
 	end
 end
 
-function FS.Util.Range(start, stop, step)
+function WFI.Util.Range(start, stop, step)
 	if stop == nil then
 		stop = start
 		start = (stop >= 0) and 1 or -1
@@ -281,7 +281,7 @@ do
 	end
 
 	function Stream:zip(...)
-		return FS.Util.Stream(zip_gen, { self, ... })
+		return WFI.Util.Stream(zip_gen, { self, ... })
 	end
 end
 
@@ -293,7 +293,7 @@ end
 function Stream:sort(sorter)
 	local vals = self:toList()
 	table.sort(vals, sorter)
-	return FS.Util.Stream(vals)
+	return WFI.Util.Stream(vals)
 end
 
 -------------------------------------------------------------------------------

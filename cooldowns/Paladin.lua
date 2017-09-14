@@ -1,5 +1,5 @@
-local _, FS = ...
-local Cooldowns = FS:GetModule("Cooldowns")
+local _, WFI = ...
+local Cooldowns = WFI:GetModule("Cooldowns")
 
 local SPEC_HOLY = 65
 local SPEC_PROTECTION = 66
@@ -28,7 +28,7 @@ end
 Cooldowns:RegisterSpells("PALADIN", {
 	[642] = { -- Divine Shield
 		cooldown = function(unit) return 300 * UnbreakableSpirit(unit) * DivineIntervention(unit) end,
-		duration = 8
+		duration = 8,
 		-- Prot Artifact makes it rechage faster with Forbearance
 	},
 	[633] = { -- Lay on Hands

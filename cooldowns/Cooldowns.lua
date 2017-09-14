@@ -1,7 +1,7 @@
-local _, FS = ...
-local Cooldowns = FS:RegisterModule("Cooldowns")
+local _, WFI = ...
+local Cooldowns = WFI:RegisterModule("Cooldowns")
 
-local FsCooldownsTooltip = FsCooldownsTooltip
+local WfiCooldownsTooltip = WfiCooldownsTooltip
 local Roster
 
 -------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ local cooldowns_config = {
 	},
 	notice = {
 		type = "description",
-		name = "|cff999999This module only provides low-level tracking for developers.\nIf you want a visual cooldown tracker, take a look at FSCooldowns2.\n",
+		name = "|cff999999This module only provides low-level tracking for developers.\nIf you want a visual cooldown tracker, take a look at WFICooldowns2.\n",
 		order = 6
 	},
 	verification = {
@@ -50,36 +50,36 @@ local cooldowns_config = {
 		name = "Module reference",
 		order = 1000
 	},
-	docs = FS.Config:MakeDoc("Public API", 2000, {
+	docs = WFI.Config:MakeDoc("Public API", 2000, {
 		{ ":GetCooldown ( guid , spell ) -> Cooldown", "Returns the cooldowns object for the given spell from the player."},
 		{ ":IsCooldownReady ( guid , spell ) -> boolean", "Checks if a given player can use the requested spell."},
 		{ ":GetUnit ( guid ) -> Unit", "Returns the unit object corresponding to the given player."},
 		{ ":GetSpell ( spell , guid ) -> SpellDefinition", "Returns a spell definition table."},
 		{ ":IterateUnits ( ) -> [ guid , Unit ]", "Iterates over every tracked units."},
 		{ ":IterateSpells ( ) -> [ spell , SpellDefinition ]", "Iterates over every defined spells."},
-	}, "FS.Cooldowns"),
-	unit_api = FS.Config:MakeDoc("Unit API", 2100, {
+	}, "WFI.Cooldowns"),
+	unit_api = WFI.Config:MakeDoc("Unit API", 2100, {
 		{ ":HasTalent ( talentid ) -> boolean", "Checks if the unit has the requested talent."},
 		{ ":UnitID ( ) -> unitid", "Returns the last known unitid for this unit."},
 		{ ":GetCooldown ( spell , target ) -> Cooldown", "Returns the cooldowns object for the given spell."},
 		{ ":IsCooldownReady ( spell , target ) -> boolean", "Checks if the unit can use the requested spell."},
 		{ ":IterateCooldowns ( ) -> [ spellid , Cooldown ]", "Iterates over every cooldown for this unit."},
 	}, "Unit"),
-	cd_api = FS.Config:MakeDoc("Cooldown API", 2200, {
+	cd_api = WFI.Config:MakeDoc("Cooldown API", 2200, {
 		{ ":IsActive ( ) -> boolean", "Returns TRUE if this spell effect is still active."},
 		{ ":Duration ( ) -> number, number, number", "Returns elapsed, left and total time information about the active effect of this spell."},
 		{ ":MaxCharges ( ) -> unitid", "Returns the max number of charges available for this spell."},
 		{ ":IsReady ( unitid ) -> boolean", "Returns if this spell can be cast on the given target, optional."},
 		{ ":Cooldown ( ) -> number, number, number", "Returns elapsed, left and total time information about the cooldown of this spell."},
 	}, "Cooldown"),
-	events = FS.Config:MakeDoc("Emitted events", 3000, {
+	events = WFI.Config:MakeDoc("Emitted events", 3000, {
 		{ "_GAINED ( guid , spellid )", "Emitted when a unit gains a new spell with a cooldown."},
 		{ "_LOST ( guid , spellid )", "Emitted when a unit loses a spell."},
 		{ "_USED ( guid , spellid , duration )", "Emitted when a unit uses a spell.\nThe duration is the duration of the active effect."},
 		{ "_START ( guid , spellid , cooldown )", "Emitted when a spell's cooldown begins.\nThe cooldown is the duration of the cooldown."},
 		{ "_READY ( guid , spellid )", "Emitted when a spell is ready to be cast again."},
 		{ "_RESET ( guid , spellid )", "Emitted when the cooldown is reset at the end of a raid encounter."},
-	}, "FS_COOLDOWNS")
+	}, "WFI_COOLDOWNS")
 }
 
 -------------------------------------------------------------------------------
@@ -93,20 +93,20 @@ Cooldowns.aliases = {}
 local currentEncounter = 0
 
 function Cooldowns:OnInitialize()
-	FS.Config:Register("Cooldowns tracker", cooldowns_config)
-	Roster = FS.Roster
+	WFI.Config:Register("Cooldowns tracker", cooldowns_config)
+	Roster = WFI.Roster
 
-	self.db = FS.db:RegisterNamespace("Cooldowns", cooldowns_default)
+	self.db = WFI.db:RegisterNamespace("Cooldowns", cooldowns_default)
 	self.settings = self.db.profile
 end
 
 function Cooldowns:OnEnable()
-	self:RegisterMessage("FS_ROSTER_UPDATE")
-	self:RegisterMessage("FS_ROSTER_LEFT")
+	self:RegisterMessage("WFI_ROSTER_UPDATE")
+	self:RegisterMessage("WFI_ROSTER_LEFT")
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	self:RegisterEvent("ENCOUNTER_START")
 	self:RegisterEvent("ENCOUNTER_END")
-	self:RegisterMessage("FS_MSG_COOLDOWNS")
+	self:RegisterMessage("WFI_MSG_COOLDOWNS")
 end
 
 function Cooldowns:OnDisable()
@@ -120,7 +120,7 @@ end
 -- If a spell has one of these tags, the aliases will be automatically applied
 -- to the same spell, this process is recursive.
 local tag_aliases = {
-	["IMMUNE"] = { "IMMUNE_MAGICAL", "IMMUNE_PHYSICAL", "REDUCE_HUGE" },
+	--[[["IMMUNE"] = { "IMMUNE_MAGICAL", "IMMUNE_PHYSICAL", "REDUCE_HUGE" },
 	["REDUCE_HUGE"] = { "REDUCE_HUGE_MAGICAL", "REDUCE_HUGE_PHYSICAL", "REDUCE_BIG" },  -- 90%
 	["REDUCE_BIG"] = { "REDUCE_BIG_MAGICAL", "REDUCE_BIG_PHYSICAL", "REDUCE_SMALL" }, -- 50%
 	["REDUCE_SMALL"] = { "REDUCE_SMALL_MAGICAL", "REDUCE_SMALL_PHYSICAL" }, -- 30%
@@ -134,7 +134,7 @@ local tag_aliases = {
 	["REDUCE_BIG_PHYSICAL"] = { "REDUCE_SMALL_PHYSICAL" },
 
 	["SILENCE"] = { "INTERRUPT" },
-	["AOE_STUN"] = { "STUN" }
+	["AOE_STUN"] = { "STUN" }]]
 }
 
 -- Registers a new spell in the tracker database
@@ -505,7 +505,7 @@ function Cooldown:Update()
 	end
 
 	self:Invoke("onupdate")
-	self:Emit("FS_COOLDOWNS_UPDATE")
+	self:Emit("WFI_COOLDOWNS_UPDATE")
 end
 
 -- Cancel the internal timer
@@ -531,7 +531,7 @@ function Cooldown:BeginCooldown(cooldown)
 	end)
 
 	self:Invoke("onbegin", cooldown)
-	self:Emit("FS_COOLDOWNS_START", cooldown)
+	self:Emit("WFI_COOLDOWNS_START", cooldown)
 end
 
 -- This spell's cooldown is now finished
@@ -544,7 +544,7 @@ function Cooldown:CooldownFinished()
 	self.used = used
 
 	self:Invoke("onfinish")
-	self:Emit("FS_COOLDOWNS_READY")
+	self:Emit("WFI_COOLDOWNS_READY")
 
 	-- At least one charge left to cool down
 	if used > 0 then
@@ -567,7 +567,7 @@ function Cooldown:Trigger(target, spell, cooldown)
 		local duration = self.spell.duration or 0
 		self.cast = now
 		self.expire = now + duration
-		self:Emit("FS_COOLDOWNS_USED", duration, target, spell)
+		self:Emit("WFI_COOLDOWNS_USED", duration, target, spell)
 
 		-- If the spell was off cooldown, begin the first cooldown
 		if self.used == 1 then
@@ -589,13 +589,13 @@ function Cooldown:Reset()
 		self.expire = 0
 		self.cooldown_start = 0
 		self.cooldown = 0
-		self:Emit("FS_COOLDOWNS_RESET")
+		self:Emit("WFI_COOLDOWNS_RESET")
 	end
 end
 
 function Cooldown:Dispose()
 	self:CancelTimer()
-	self:Emit("FS_COOLDOWNS_LOST")
+	self:Emit("WFI_COOLDOWNS_LOST")
 	self:Invoke("ondispose")
 end
 
@@ -647,12 +647,12 @@ do
 				elseif not cd.spell.nocheck then
 					do -- Cooldown
 						local def_cd = cd.spell.cooldown
-						FsCooldownsTooltip:ClearLines()
-						FsCooldownsTooltip:SetSpellByID(id)
+						WfiCooldownsTooltip:ClearLines()
+						WfiCooldownsTooltip:SetSpellByID(id)
 
 						local found = false
-						for i = 2, FsCooldownsTooltip:NumLines() do
-							local text = _G["FsCooldownsTooltipTextRight" .. i]
+						for i = 2, WfiCooldownsTooltip:NumLines() do
+							local text = _G["WfiCooldownsTooltipTextRight" .. i]
 							text = text and text:GetText()
 							if text and (text:find("cooldown") or text:find("recharge")) then
 								local value, unit = text:match("^([%d\.]+) (%a+)")
@@ -764,7 +764,7 @@ do
 				if not cd then
 					cd = Cooldown:New(unit, spell)
 					unit.cooldowns[id] = cd
-					cd:Emit("FS_COOLDOWNS_GAINED")
+					cd:Emit("WFI_COOLDOWNS_GAINED")
 				end
 				cd:Update()
 			elseif cd then
@@ -819,11 +819,11 @@ end
 -- Events
 -------------------------------------------------------------------------------
 
-function Cooldowns:FS_ROSTER_UPDATE(_, guid, _, info)
+function Cooldowns:WFI_ROSTER_UPDATE(_, guid, _, info)
 	self:UpdateUnit(guid, info)
 end
 
-function Cooldowns:FS_ROSTER_LEFT(_, guid)
+function Cooldowns:WFI_ROSTER_LEFT(_, guid)
 	local unit = self.units[guid]
 	if unit then
 		unit:Dispose()
@@ -847,7 +847,7 @@ do
 		debounce[key] = GetTime()
 
 		if broadcast and IsInGroup() then
-			FS:Send("COOLDOWNS", { source = source, target = target, spell = spell, key = key }, "RAID")
+			WFI:Send("COOLDOWNS", { source = source, target = target, spell = spell, key = key }, "RAID")
 		end
 	end
 
@@ -855,7 +855,7 @@ do
 		if event == "SPELL_CAST_SUCCESS" then SpellCasted(source, target, spell, true) end
 	end
 
-	function Cooldowns:FS_MSG_COOLDOWNS(_, data)
+	function Cooldowns:WFI_MSG_COOLDOWNS(_, data)
 		local time = debounce[data.key]
 		if not time or (GetTime() - time > 1) then
 			SpellCasted(data.source, data.target, data.spell, false)

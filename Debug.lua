@@ -1,5 +1,5 @@
-local _, FS = ...
-local Debug = FS:RegisterModule("Debug")
+local _, WFI = ...
+local Debug = WFI:RegisterModule("Debug")
 
 -------------------------------------------------------------------------------
 -- Config
@@ -44,18 +44,18 @@ local debug_config = {
 		name = "Module reference",
 		order = 1000,
 	},
-	docs = FS.Config:MakeDoc("Public API", 2000, {
+	docs = WFI.Config:MakeDoc("Public API", 2000, {
 		{":Dump ( obj )", "Dumps the given object in the chat."},
-	}, "FS"),
-	levels = FS.Config:MakeDoc("Logging API", 3000, {
+	}, "WFI"),
+	levels = WFI.Config:MakeDoc("Logging API", 3000, {
 		{":Error ( label , data )", "Critical error preventing the addon from producing any results at all."},
 		{":Warn ( label , data )", "Serious error that does not prevent the addon from performing its task."},
 		{":Info ( label , data )", "Informational data that may be useful to a moderately advanced users."},
 		{":Debug ( label , data )", "Debug data useful only for developers."},
-	}, "FS"),
-	events = FS.Config:MakeDoc("Emitted events", 4000, {
+	}, "WFI"),
+	events = WFI.Config:MakeDoc("Emitted events", 4000, {
 		{"_LOG ( level , label , data )", "Emitted when a logging function is called.\nLevel will be \"ERROR\", \"WARNING\", \"INFO\" or \"DEBUG\"."},
-	}, "FS_DEBUG"),
+	}, "WFI_DEBUG"),
 }
 
 -------------------------------------------------------------------------------
@@ -63,9 +63,9 @@ local debug_config = {
 -------------------------------------------------------------------------------
 
 function Debug:OnInitialize()
-	self.db = FS.db:RegisterNamespace("Debug", debug_defaults)
+	self.db = WFI.db:RegisterNamespace("Debug", debug_defaults)
 	self.settings = self.db.profile
-	FS.Config:Register("Debug", debug_config)
+	WFI.Config:Register("Debug", debug_config)
 end
 
 -------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ end
 -------------------------------------------------------------------------------
 
 -- Dump helper
-function FS:Dump(t)
+function WFI:Dump(t)
 	local dump_cache = {}
 	local function to_string(v)
 		local tpe = type(v)
@@ -132,18 +132,18 @@ end
 -- Logging
 -------------------------------------------------------------------------------
 
-function FS:Error(label , data)
+function WFI:Error(label , data)
 	error("NYI")
 end
 
-function FS:Warn(label , data)
+function WFI:Warn(label , data)
 	error("NYI")
 end
 
-function FS:Info(label , data)
+function WFI:Info(label , data)
 	error("NYI")
 end
 
-function FS:Debug(label , data)
+function WFI:Debug(label , data)
 	error("NYI")
 end

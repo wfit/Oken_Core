@@ -1,12 +1,12 @@
-local _, FS = ...
-local Console = FS:RegisterModule("Console")
+local _, WFI = ...
+local Console = WFI:RegisterModule("Console")
 
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 Console.commands = {}
 
 function Console:OnEnable()
-	self:RegisterChatCommand("fs", "OnSlash")
+	self:RegisterChatCommand("wfi", "OnSlash")
 end
 
 function Console:PrintAvailableCommands()
@@ -21,8 +21,8 @@ function Console:OnSlash(cmd)
 	-- Extract subcmd from cmd line
 	local subcmd, n = self:GetArgs(cmd)
 	if not subcmd then
-		AceConfigDialog:Open("FS Core")
-		--self:Print("Usage: /fs <cmd> <args>")
+		AceConfigDialog:Open("WFI Core")
+		--self:Print("Usage: /wfi <cmd> <args>")
 		--self:PrintAvailableCommands()
 		return
 	end

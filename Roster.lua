@@ -1,5 +1,5 @@
-local _, FS = ...
-local Roster = FS:RegisterModule("Roster", "AceTimer-3.0")
+local _, WFI = ...
+local Roster = WFI:RegisterModule("Roster", "AceTimer-3.0")
 
 local LGIST = LibStub:GetLibrary("LibGroupInSpecT-1.1")
 local LAD = LibStub:GetLibrary("LibArtifactData-1.0")
@@ -26,22 +26,22 @@ local roster_config = {
 		name = "Module reference",
 		order = 1000
 	},
-	docs = FS.Config:MakeDoc("Public API", 2000, {
+	docs = WFI.Config:MakeDoc("Public API", 2000, {
 		{":Iterate ( sorted , limit ) -> [ unit ]", "Returns an iterator over the group members.\nIf sorted is given and you are in a raid group, units are sorted by role."},
 		{":GetUnit ( guid ) -> unit", "Returns the unitid for a given GUID, if known."},
 		{":GetInfo ( guid ) -> InfoTable", "Returns talents and glyphs information for a player. See LibGroupInSpec_T for more information."}
-	}, "FS.Roster"),
-	events = FS.Config:MakeDoc("Emitted events", 3000, {
+	}, "WFI.Roster"),
+	events = WFI.Config:MakeDoc("Emitted events", 3000, {
 		{"_JOINED ( guid , unit )", "Emitted when a new unit has joined the group."},
 		{"_UPDATE ( guid , unit , info )", "Emitted when talents info are updated for a unit."},
 		{"_LEFT ( guid )", "Emitted when a unit has left the group."},
-	}, "FS_ROSTER")
+	}, "WFI_ROSTER")
 }
 
 --------------------------------------------------------------------------------
 
 function Roster:OnInitialize()
-	FS.Config:Register("Roster tracker", roster_config)
+	WFI.Config:Register("Roster tracker", roster_config)
 
 	self.group = {}
 	self.infos = {}
@@ -59,8 +59,8 @@ function Roster:OnInitialize()
 	LAD.RegisterCallback(self, "ARTIFACT_RELIC_CHANGED", "ArtifactUpdate")
 	LAD.RegisterCallback(self, "ARTIFACT_TRAITS_CHANGED", "ArtifactUpdate")
 
-	self:RegisterMessage("FS_MSG_ROSTER_BROADCAST")
-	self:RegisterMessage("FS_MSG_ROSTER_REQUEST", "ScheduleBroadcast")
+	self:RegisterMessage("WFI_MSG_ROSTER_BROADCAST")
+	self:RegisterMessage("WFI_MSG_ROSTER_REQUEST", "ScheduleBroadcast")
 
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", "ScheduleBroadcast")
 	self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "ScheduleLegendariesRebuild")
@@ -77,7 +77,7 @@ end
 
 function Roster:PLAYER_ENTERING_WORLD()
 	if IsInGroup() then
-		FS:Send("ROSTER_REQUEST", true)
+		WFI:Send("ROSTER_REQUEST", true)
 	end
 	self:ScheduleLegendariesRebuild()
 end
@@ -88,7 +88,7 @@ do
 	local function broadcast()
 		if IsInGroup() then
 			local guid = UnitGUID("player")
-			FS:Send("ROSTER_BROADCAST", { guid, Roster.artifacts[guid], Roster.legendaries[guid] })
+			WFI:Send("ROSTER_BROADCAST", { guid, Roster.artifacts[guid], Roster.legendaries[guid] })
 		end
 	end
 
@@ -107,7 +107,7 @@ do
 		end
 	end
 
-	function Roster:FS_MSG_ROSTER_BROADCAST(_, data)
+	function Roster:WFI_MSG_ROSTER_BROADCAST(_, data)
 		local guid = data[1]
 		local artifact = data[2]
 		local legendaries = data[3]
@@ -116,7 +116,7 @@ do
 
 		Roster.artifacts[guid] = artifact
 		Roster.legendaries[guid] = legendaries
-		Roster:SendMessage("FS_ROSTER_UPDATE", guid, Roster:GetUnit(guid), Roster:GetInfo(guid))
+		Roster:SendMessage("WFI_ROSTER_UPDATE", guid, Roster:GetUnit(guid), Roster:GetInfo(guid))
 	end
 end
 
@@ -251,7 +251,7 @@ do
 		local data = LAD:GetAllArtifactsInfo()
 		local activeID = LAD:GetActiveArtifactID()
 
-		Roster.playerArtifact = FS:Clone(data)
+		Roster.playerArtifact = WFI:Clone(data)
 		Roster.playerArtifact.active = activeID
 
 		if activeID and data[activeID] then
@@ -269,9 +269,9 @@ do
 		end
 
 		Roster.artifacts[guid] = data
-		Roster:SendMessage("FS_ROSTER_UPDATE", guid, "player", Roster:GetInfo(guid))
+		Roster:SendMessage("WFI_ROSTER_UPDATE", guid, "player", Roster:GetInfo(guid))
 		Roster:ScheduleBroadcast()
-		Roster:SendMessage("FS_ROSTER_ARTIFACT_REBUILT")
+		Roster:SendMessage("WFI_ROSTER_ARTIFACT_REBUILT")
 	end
 
 	local rebuild_pending = false
@@ -287,7 +287,7 @@ do
 	end
 
 	function Roster:ArtifactUpdate(tpe, ...)
-		self:SendMessage("FS_ROSTER_" .. tpe, ...)
+		self:SendMessage("WFI_ROSTER_" .. tpe, ...)
 		self:ScheduleArtifactRebuild()
 	end
 end
@@ -310,9 +310,9 @@ do
 		end
 
 		Roster.legendaries[guid] = data
-		Roster:SendMessage("FS_ROSTER_UPDATE", guid, "player", Roster:GetInfo(guid))
+		Roster:SendMessage("WFI_ROSTER_UPDATE", guid, "player", Roster:GetInfo(guid))
 		Roster:ScheduleBroadcast()
-		Roster:SendMessage("FS_ROSTER_LEGENDARIES_REBUILT")
+		Roster:SendMessage("WFI_ROSTER_LEGENDARIES_REBUILT")
 	end
 
 	local rebuild_pending = false
@@ -332,16 +332,16 @@ end
 
 function Roster:RosterUpdate(_, guid, unit, info)
 	if not self.group[guid] then
-		self:SendMessage("FS_ROSTER_JOINED", guid, unit)
+		self:SendMessage("WFI_ROSTER_JOINED", guid, unit)
 		self.group[guid] = true
 	end
 	self.infos[guid] = info
-	self:SendMessage("FS_ROSTER_UPDATE", guid, unit, self:GetInfo(guid))
+	self:SendMessage("WFI_ROSTER_UPDATE", guid, unit, self:GetInfo(guid))
 end
 
 function Roster:RosterRemove(_, guid)
 	self.group[guid] = nil
 	self.infos[guid] = nil
 	self.artifacts[guid] = nil
-	self:SendMessage("FS_ROSTER_LEFT", guid)
+	self:SendMessage("WFI_ROSTER_LEFT", guid)
 end

@@ -1,5 +1,5 @@
-local _, FS = ...
-local Cooldowns = FS:GetModule("Cooldowns")
+local _, WFI = ...
+local Cooldowns = WFI:GetModule("Cooldowns")
 
 local SPEC_HAVOC = 577
 local SPEC_VENGEANCE = 581
@@ -15,8 +15,7 @@ Cooldowns:RegisterSpells("DEMONHUNTER", {
 	},
 
 	-- Havoc
-	[196718] = {
-		-- Darkness
+	[196718] = { -- Darkness
 		cooldown = 180,
 		duration = 8,
 		spec = SPEC_HAVOC,
@@ -68,6 +67,7 @@ Cooldowns:RegisterSpells("DEMONHUNTER", {
 	[196555] = { -- Netherwalk
 		cooldown = 120,
 		duration = 5,
-		talent = true
+		talent = true,
+		tag = "IMMUNE"
 	},
 })

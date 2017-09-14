@@ -1,6 +1,6 @@
-local _, FS = ...
+local _, WFI = ...
 
-FS.Util.Spinner = {}
+WFI.Util.Spinner = {}
 
 local spinnerFunctions = {};
 
@@ -306,7 +306,7 @@ local function createTexCoord(texture)
 	return coord
 end
 
-function FS.Util.Spinner.Create()
+function WFI.Util.Spinner.Create()
 	local spinner = {}
 	spinner.frame = CreateFrame("Frame", nil)
 

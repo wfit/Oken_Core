@@ -1,28 +1,28 @@
 local _, Core = ...
 
-FS = LibStub("AceAddon-3.0"):NewAddon(Core, "FS")
-FS.Util = {}
-FS.PTR = GetBuildInfo() == "7.1.0"
+WFI = LibStub("AceAddon-3.0"):NewAddon(Core, "WFI")
+WFI.Util = {}
+WFI.PTR = GetBuildInfo() == "7.1.0"
 
-LibStub("AceEvent-3.0"):Embed(FS)
-LibStub("AceConsole-3.0"):Embed(FS)
+LibStub("AceEvent-3.0"):Embed(WFI)
+LibStub("AceConsole-3.0"):Embed(WFI)
 
-FS:SetDefaultModuleLibraries("AceEvent-3.0", "AceConsole-3.0")
+WFI:SetDefaultModuleLibraries("AceEvent-3.0", "AceConsole-3.0")
 
 local LSM = LibStub("LibSharedMedia-3.0")
-LSM:Register("font", "Fira Mono Medium", "Interface\\Addons\\FS_Core\\media\\FiraMono-Medium.ttf")
+LSM:Register("font", "Fira Mono Medium", "Interface\\Addons\\WFI_Core\\media\\FiraMono-Medium.ttf")
 
 -- Version
 do
 	local version_str = "@project-version@"
 	local dev_version = "@project" .. "-version@"
-	FS.version = version_str == dev_version and "dev" or version_str
+	WFI.version = version_str == dev_version and "dev" or version_str
 end
 
 function Core:OnInitialize()
-	self.db = LibStub("AceDB-3.0"):New("FSDB", nil, true)
+	self.db = LibStub("AceDB-3.0"):New("WFIDB", nil, true)
 	if not self.db.global.PLAYER_KEY then
-		self.db.global.PLAYER_KEY = "PK:" .. FS:UUID() .. ":" .. time()
+		self.db.global.PLAYER_KEY = "PK:" .. WFI:UUID() .. ":" .. time()
 	end
 end
 
@@ -30,7 +30,7 @@ function Core:OnEnable()
 	self:RegisterEvent("ENCOUNTER_START")
 	self:RegisterEvent("ENCOUNTER_END")
 	self:RegisterEvent("GUILD_ROSTER_UPDATE")
-	self:Printf("Core Loaded [%s]", FS.version)
+	self:Printf("Core Loaded [%s]", WFI.version)
 end
 
 function Core:RegisterModule(name, ...)
