@@ -30,6 +30,7 @@ function Core:OnEnable()
 	self:RegisterEvent("ENCOUNTER_START")
 	self:RegisterEvent("ENCOUNTER_END")
 	self:RegisterEvent("GUILD_ROSTER_UPDATE")
+	self:RegisterEvent("GUILD_MOTD", "CheckMOTD")
 	self:Printf("Core Loaded [%s]", WFI.version)
 end
 
@@ -58,6 +59,8 @@ do
 	}
 
 	function Core:CheckMOTD()
+		if self:EncounterInProgress() then return end
+
 		local motd = GetGuildRosterMOTD()
 		if not motd or motd == "" then return end
 
