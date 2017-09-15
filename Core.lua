@@ -39,6 +39,40 @@ function Core:RegisterModule(name, ...)
 	return mod
 end
 
+-- MOTD
+do
+	local motd
+	local guildName
+
+	StaticPopupDialogs["GUILD_MOTD"] = {
+		text = "",
+		button1 = "Ok",
+		--button2 = "No",
+		OnAccept = function()
+			--GreetTheWorld()
+		end,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = true,
+		preferredIndex = 3, -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+	}
+
+	function Core:CheckMOTD()
+		local motd = GetGuildRosterMOTD()
+		if not motd or motd == "" then return end
+
+		local gname = GetGuildInfo("player")
+		if not gname then return end
+
+		self.db.global.motds = self.db.global.motds or {}
+		if self.db.global.motds[gname] ~= motd then
+			self.db.global.motds[gname] = motd
+			StaticPopupDialogs["GUILD_MOTD"].text = "|cffe6494a*** " .. gname .. " ***|r\n\n" .. motd
+			StaticPopup_Show("GUILD_MOTD")
+		end
+	end
+end
+
 -- Encounter tracking
 do
 	function Core:ENCOUNTER_START(id, name, difficulty, size)
@@ -69,6 +103,7 @@ do
 			local name = self:NormalizeName(GetGuildRosterInfo(i))
 			if name then guild_members[name] = true end
 		end
+		self:CheckMOTD()
 	end
 
 	function Core:UnitIsInGuild(unit)
