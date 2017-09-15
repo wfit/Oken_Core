@@ -1,8 +1,7 @@
 ## Interface: 70300
 ## Title: |cffe6494aWFI|r Core
 ## Notes: A framework to build powerful addons and enhancing boss mods for high-end raiding
-## SavedVariables: WFIDB,
-## Dependencies: Blizzard_ArtifactUI
+## SavedVariables: WFIDB
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibGroupInSpecT-1.1, LibSharedMedia-3.0
 ## OptionalDeps: LibCompress, LibDualSpec-1.0, AceGUI-3.0-SharedMediaWidgets, LibArtifactData-1.0
 ## X-WFI-Addon: 1
