@@ -29,7 +29,7 @@ Cooldowns:RegisterSpells("DRUID", {
 
 	-- Balance
 	[78675] = { -- Solar Beam
-		cooldown = function(unit) return 60 - LightOfTheSun(unit) end,
+		cooldown = 60, --function(unit) return 60 - LightOfTheSun(unit) end,
 		duration = 8,
 		spec = SPEC_BALANCE
 	},

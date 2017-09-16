@@ -9,7 +9,7 @@ local function ColdSnap(unit) return unit:HasTalentSpell(11958) and 1 or 0 end
 
 Cooldowns:RegisterSpells("MAGE", {
 	[45438] = { -- Ice block
-		cooldown = 300,
+		cooldown = 240,
 		duration = 10,
 		charges = function(unit) return 1 + ColdSnap(unit) end
 	},
