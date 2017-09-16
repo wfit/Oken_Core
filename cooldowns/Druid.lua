@@ -93,10 +93,4 @@ Cooldowns:RegisterSpells("DRUID", {
 		duration = 20,
 		talent = true
 	},
-	[61391] = { -- Typhoon
-		cooldown = 30,
-		duration = 6,
-		talent = 18577,
-		icon = 236170
-	},
 })
