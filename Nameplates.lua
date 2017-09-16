@@ -282,7 +282,7 @@ local function setup_aura_tracking(self, guid, aura, buff)
 	if not unit then
 		error("Cannot find unit " .. guid .. " for aura-tracking HUD object")
 	end
-	local spell = type(aura) == "string" and duration or GetSpellInfo(aura < 0 and -aura or aura)
+	local spell = type(aura) == "string" and aura or GetSpellInfo(aura < 0 and -aura or aura)
 	if buff == nil then buff = not not UnitBuff(unit, spell) end
 	local auraType = buff and UnitBuff or UnitDebuff
 	function self:TimeLeft()
