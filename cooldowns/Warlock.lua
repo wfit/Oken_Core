@@ -10,7 +10,10 @@ local function FirmResolve(unit) return unit:GetArtifactSpellRank(211131) * 10 e
 
 Cooldowns:RegisterSpells("WARLOCK", {
 	[104773] = { -- Unending Resolve
-		cooldown = function(unit) return 180 - DemonicDurability(unit) - FirmResolve(unit) end,
+		cooldown = function(unit)
+			local base = (unit.global_spec_id == SPEC_DESTRUCTION) and 90 or 180
+			return base - DemonicDurability(unit) - FirmResolve(unit)
+		end,
 		duration = 8
 	},
 
