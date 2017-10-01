@@ -23,7 +23,7 @@ Cooldowns:RegisterSpells("DRUID", {
 	[77764] = { -- Stampeding Roar
 		cooldown = function(unit) return 120 * GutturalRoars(unit) end,
 		duration = 8,
-		alias = 77761, -- Bear
+		alias = {77761, 106898}, -- Bear
 		spec = { SPEC_FERAL, SPEC_GUARDIAN }
 	},
 
