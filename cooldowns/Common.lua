@@ -9,7 +9,7 @@ Cooldowns:RegisterSpells({
 		cooldown = 90,
 		duration = 3,
 		race = "BloodElf",
-		alias = { 50613, 202719, 80483, 129597, 155145, 25046, 69179 }
+		alias = { 50613, 202719, 80483, 129597, 155145, 25046, 69179, 232633 }
 	},
 	[59542] = { -- Gift of the Naaru
 		cooldown = 180,
