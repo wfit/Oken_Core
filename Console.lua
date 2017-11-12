@@ -6,7 +6,7 @@ local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 Console.commands = {}
 
 function Console:OnEnable()
-	self:RegisterChatCommand("o", "OnSlash")
+	self:RegisterChatCommand("oken", "OnSlash")
 end
 
 function Console:PrintAvailableCommands()
@@ -22,7 +22,7 @@ function Console:OnSlash(cmd)
 	local subcmd, n = self:GetArgs(cmd)
 	if not subcmd then
 		AceConfigDialog:Open("Oken Core")
-		--self:Print("Usage: /o <cmd> <args>")
+		--self:Print("Usage: /oken <cmd> <args>")
 		--self:PrintAvailableCommands()
 		return
 	end
