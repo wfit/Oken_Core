@@ -1,5 +1,5 @@
-local _, WFI = ...
-local Network = WFI:RegisterModule("Network")
+local _, Oken = ...
+local Network = Oken:RegisterModule("Network")
 
 local AceComm = LibStub("AceComm-3.0")
 LibStub("AceSerializer-3.0"):Embed(Network)
@@ -81,7 +81,7 @@ version_check = {
 	},
 	desc = {
 		type = "description",
-		name = "Check the WFI Core version of guild and group members.\n",
+		name = "Check the Oken Core version of guild and group members.\n",
 		fontSize = "medium",
 		order = 1,
 	},
@@ -102,7 +102,7 @@ version_check = {
 	request_btn = {
 		type = "execute",
 		name = "Request",
-		desc = "Request guild and raid members to broadcast their WFI Core version",
+		desc = "Request guild and raid members to broadcast their Oken Core version",
 		order = 4,
 		func = function()
 			if Network:RequestVersions() then
@@ -136,18 +136,18 @@ version_check = {
 -- Register the addon messaging channel
 function Network:OnInitialize()
 	-- Settings
-	self.db = WFI.db:RegisterNamespace("Network", network_default)
+	self.db = Oken.db:RegisterNamespace("Network", network_default)
 	self.settings = self.db.profile
 
 	self.versions = {}
 	self.keys = {}
 	self.guids = {}
 
-	WFI:GetModule("Config"):Register("Network", version_gui)
-	WFI:GetModule("Config"):Register("Versions", version_check, 13)
+	Oken:GetModule("Config"):Register("Network", version_gui)
+	Oken:GetModule("Config"):Register("Versions", version_check, 13)
 
 	if self.settings.disabled then return end
-	RegisterAddonMessagePrefix("WFI")
+	RegisterAddonMessagePrefix("Oken")
 end
 
 -- Broadcast version on enable
@@ -155,7 +155,7 @@ function Network:OnEnable()
 	PLAYER_GUID = UnitGUID("player")
 	if self.settings.disabled then return end
 
-	self:RegisterMessage("WFI_MSG_$NET", "OnControlMessage")
+	self:RegisterMessage("OKEN_MSG_$NET", "OnControlMessage")
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", "BroadcastAnnounce")
 	self:RegisterEvent("CHAT_MSG_ADDON")
 
@@ -252,12 +252,12 @@ do
 		serialized = Compress:CompressHuffman(serialized)
 		serialized = CompressEncode:Encode(serialized)
 
-		AceComm:SendCommMessage("WFI", serialized, channel, target, prio, callback)
+		AceComm:SendCommMessage("Oken", serialized, channel, target, prio, callback)
 	end
 end
 
 -- Alias Send in the global object
-function WFI:Send(...)
+function Oken:Send(...)
 	return Network:Send(...)
 end
 
@@ -267,7 +267,7 @@ end
 
 -- Handle reception without Ambiguate, thanks AceComm!
 function Network:CHAT_MSG_ADDON(event, prefix, message, distribution, sender)
-	if prefix ~= "WFI" then return end
+	if prefix ~= "Oken" then return end
 	local control, rest = match(message, "^([\001-\009])(.*)")
 	if control then
 		if control == MSG_MULTI_FIRST then
@@ -377,15 +377,15 @@ function Network:OnCommReceived(text, channel, source)
 	end
 
 	-- Emit
-	self:SendMessage("WFI_MSG", label, data or EMPTY_TABLE, channel, source)
-	self:SendMessage("WFI_MSG_" .. label:upper(), data or EMPTY_TABLE, channel, source)
+	self:SendMessage("OKEN_MSG", label, data or EMPTY_TABLE, channel, source)
+	self:SendMessage("OKEN_MSG_" .. label:upper(), data or EMPTY_TABLE, channel, source)
 end
 
 -------------------------------------------------------------------------------
 -- Broadcast
 -------------------------------------------------------------------------------
 
--- Broadcast WFI Core ANNOUNCE message
+-- Broadcast Oken Core ANNOUNCE message
 do
 	local delay
 
@@ -395,8 +395,8 @@ do
 		local msg = {
 			"ANNOUNCE",
 			{
-				version = WFI.version,
-				key = WFI:PlayerKey(),
+				version = Oken.version,
+				key = Oken:PlayerKey(),
 				guid = PLAYER_GUID
 			}
 		}
@@ -423,10 +423,10 @@ do
 end
 
 -------------------------------------------------------------------------------
--- WFI_MSG_$NET handling
+-- OKEN_MSG_$NET handling
 -------------------------------------------------------------------------------
 
--- Handle WFI_MSG_$NET (Network Control) messages
+-- Handle OKEN_MSG_$NET (Network Control) messages
 function Network:OnControlMessage(_, msg, channel, sender)
 	local cmd, data = unpack(msg)
 	if cmd == "ANNOUNCE" then
@@ -441,7 +441,7 @@ function Network:OnControlMessage(_, msg, channel, sender)
 			name = sender .. "  -  " .. data.version
 		}
 
-		AceConfigRegistry:NotifyChange("WFI Core")
+		AceConfigRegistry:NotifyChange("Oken Core")
 	elseif cmd == "REQ_ANNOUNCE" then
 		self:BroadcastAnnounce()
 	end

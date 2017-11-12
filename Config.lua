@@ -1,5 +1,5 @@
-local _, WFI = ...
-local Config = WFI:RegisterModule("Config")
+local _, Oken = ...
+local Config = Oken:RegisterModule("Config")
 
 local AceConfig = LibStub("AceConfig-3.0")
 
@@ -13,13 +13,13 @@ local options = {
 			args = {
 				title = {
 					type = "description",
-					name = "|cff64b4ffWFI Core",
+					name = "|cff64b4ffOken Core",
 					fontSize = "large",
 					order = 0
 				},
 				desc = {
 					type = "description",
-					name = "WFI Core provides a framework to build powerful addons, WeakAuras and enhancing boss mods for high-end raiding.",
+					name = "Oken Core provides a framework to build powerful addons, WeakAuras and enhancing boss mods for high-end raiding.",
 					fontSize = "medium",
 					order = 1
 				},
@@ -30,13 +30,13 @@ local options = {
 				},
 				version = {
 					type = "description",
-					name = "|cffffd100Version: |r" .. WFI.version,
+					name = "|cffffd100Version: |r" .. Oken.version,
 					order = 3
 				},
 				player_key = {
 					type = "description",
 					name = function()
-						return "|cffffd100\nPlayer key:\n|r" .. WFI:Wrap(WFI:PlayerKey(), 40)
+						return "|cffffd100\nPlayer key:\n|r" .. Oken:Wrap(Oken:PlayerKey(), 40)
 					end,
 					hidden = true,
 					order = 4
@@ -47,11 +47,11 @@ local options = {
 }
 
 function Config:OnInitialize()
-	AceConfig:RegisterOptionsTable("WFI Core", options)
+	AceConfig:RegisterOptionsTable("Oken Core", options)
 end
 
 function Config:OnEnable()
-	options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(WFI.db)
+	options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(Oken.db)
 end
 
 function Config:Register(title, config, order)

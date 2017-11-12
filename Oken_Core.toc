@@ -1,10 +1,10 @@
 ## Interface: 70300
-## Title: |cffe6494aWFI|r Core
-## Notes: A framework to build powerful addons and enhancing boss mods for high-end raiding
-## SavedVariables: WFIDB
+## Title: |cffe6494aOken|r Core
+## Notes: Framework and Resources for Addons
+## SavedVariables: OkenDB
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibGroupInSpecT-1.1, LibSharedMedia-3.0
 ## OptionalDeps: LibCompress, LibDualSpec-1.0, AceGUI-3.0-SharedMediaWidgets, LibArtifactData-1.0
-## X-WFI-Addon: 1
+## X-Oken-Addon: 1
 
 libs\Ace3\LibStub\LibStub.lua
 libs\Ace3\CallbackHandler-1.0\CallbackHandler-1.0.xml
@@ -29,6 +29,8 @@ libs\LibDualSpec-1.0\LibDualSpec-1.0.lua
 libs\LibCompress\lib.xml
 libs\LibArtifactData-1.0.lua
 libs\indents.lua
+
+media\sharedmedia.lua
 
 Core.lua
 

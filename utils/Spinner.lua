@@ -1,6 +1,6 @@
-local _, WFI = ...
+local _, Oken = ...
 
-WFI.Util.Spinner = {}
+Oken.Util.Spinner = {}
 
 local spinnerFunctions = {};
 
@@ -306,7 +306,7 @@ local function createTexCoord(texture)
 	return coord
 end
 
-function WFI.Util.Spinner.Create()
+function Oken.Util.Spinner.Create()
 	local spinner = {}
 	spinner.frame = CreateFrame("Frame", nil)
 

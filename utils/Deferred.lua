@@ -1,4 +1,4 @@
-local _, WFI = ...
+local _, Oken = ...
 
 local Deferred = {}
 Deferred.__index = Deferred
@@ -72,7 +72,7 @@ function Deferred:flatmap(fn)
 	return child
 end
 
-function WFI.Util.Deferred(value)
+function Oken.Util.Deferred(value)
 	local deferred = new()
 	if value ~= nil then
 		deferred:Resolve(value)

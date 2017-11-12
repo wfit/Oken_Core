@@ -1,5 +1,5 @@
-local _, WFI = ...
-local Debug = WFI:RegisterModule("Debug")
+local _, Oken = ...
+local Debug = Oken:RegisterModule("Debug")
 
 -------------------------------------------------------------------------------
 -- Config
@@ -44,18 +44,18 @@ local debug_config = {
 		name = "Module reference",
 		order = 1000,
 	},
-	docs = WFI.Config:MakeDoc("Public API", 2000, {
+	docs = Oken.Config:MakeDoc("Public API", 2000, {
 		{":Dump ( obj )", "Dumps the given object in the chat."},
-	}, "WFI"),
-	levels = WFI.Config:MakeDoc("Logging API", 3000, {
+	}, "Oken"),
+	levels = Oken.Config:MakeDoc("Logging API", 3000, {
 		{":Error ( label , data )", "Critical error preventing the addon from producing any results at all."},
 		{":Warn ( label , data )", "Serious error that does not prevent the addon from performing its task."},
 		{":Info ( label , data )", "Informational data that may be useful to a moderately advanced users."},
 		{":Debug ( label , data )", "Debug data useful only for developers."},
-	}, "WFI"),
-	events = WFI.Config:MakeDoc("Emitted events", 4000, {
+	}, "Oken"),
+	events = Oken.Config:MakeDoc("Emitted events", 4000, {
 		{"_LOG ( level , label , data )", "Emitted when a logging function is called.\nLevel will be \"ERROR\", \"WARNING\", \"INFO\" or \"DEBUG\"."},
-	}, "WFI_DEBUG"),
+	}, "OKEN_DEBUG"),
 }
 
 -------------------------------------------------------------------------------
@@ -63,9 +63,9 @@ local debug_config = {
 -------------------------------------------------------------------------------
 
 function Debug:OnInitialize()
-	self.db = WFI.db:RegisterNamespace("Debug", debug_defaults)
+	self.db = Oken.db:RegisterNamespace("Debug", debug_defaults)
 	self.settings = self.db.profile
-	WFI.Config:Register("Debug", debug_config)
+	Oken.Config:Register("Debug", debug_config)
 end
 
 -------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ end
 -------------------------------------------------------------------------------
 
 -- Dump helper
-function WFI:Dump(t)
+function Oken:Dump(t)
 	local dump_cache = {}
 	local function to_string(v)
 		local tpe = type(v)
@@ -132,18 +132,18 @@ end
 -- Logging
 -------------------------------------------------------------------------------
 
-function WFI:Error(label , data)
+function Oken:Error(label , data)
 	error("NYI")
 end
 
-function WFI:Warn(label , data)
+function Oken:Warn(label , data)
 	error("NYI")
 end
 
-function WFI:Info(label , data)
+function Oken:Info(label , data)
 	error("NYI")
 end
 
-function WFI:Debug(label , data)
+function Oken:Debug(label , data)
 	error("NYI")
 end

@@ -1,5 +1,5 @@
-local _, WFI = ...
-local Cooldowns = WFI:GetModule("Cooldowns")
+local _, Oken = ...
+local Cooldowns = Oken:GetModule("Cooldowns")
 
 local SPEC_ELEMENTAL = 262
 local SPEC_ENHANCEMENT = 263

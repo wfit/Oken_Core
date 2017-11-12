@@ -1,6 +1,6 @@
-local _, WFI = ...
+local _, Oken = ...
 
-local Operator = WFI.Util.Operator
+local Operator = Oken.Util.Operator
 
 -- Stream methods
 local Stream = {}
@@ -32,7 +32,7 @@ end
 -- Generators
 -------------------------------------------------------------------------------
 
-function WFI.Util.Stream(gen, param, state)
+function Oken.Util.Stream(gen, param, state)
 	local tpe = type(gen)
 	if tpe == "function" then
 		return stream(gen, param, state)
@@ -45,7 +45,7 @@ function WFI.Util.Stream(gen, param, state)
 	end
 end
 
-function WFI.Util.Generate(generator, state, ...)
+function Oken.Util.Generate(generator, state, ...)
 	if type(generator) == "function" then
 		local first = state ~= nil
 
@@ -72,7 +72,7 @@ function WFI.Util.Generate(generator, state, ...)
 	end
 end
 
-function WFI.Util.Range(start, stop, step)
+function Oken.Util.Range(start, stop, step)
 	if stop == nil then
 		stop = start
 		start = (stop >= 0) and 1 or -1
@@ -281,7 +281,7 @@ do
 	end
 
 	function Stream:zip(...)
-		return WFI.Util.Stream(zip_gen, { self, ... })
+		return Oken.Util.Stream(zip_gen, { self, ... })
 	end
 end
 
@@ -293,7 +293,7 @@ end
 function Stream:sort(sorter)
 	local vals = self:toList()
 	table.sort(vals, sorter)
-	return WFI.Util.Stream(vals)
+	return Oken.Util.Stream(vals)
 end
 
 -------------------------------------------------------------------------------

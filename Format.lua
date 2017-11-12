@@ -1,6 +1,6 @@
-local _, WFI = ...
+local _, Oken = ...
 
-function WFI:Round(val, decimal)
+function Oken:Round(val, decimal)
 	if decimal then
 		return math.floor( (val * 10^decimal) + 0.5) / (10^decimal)
 	else
@@ -8,7 +8,7 @@ function WFI:Round(val, decimal)
 	end
 end
 
-function WFI:ShortenNumber(value, decimal)
+function Oken:ShortenNumber(value, decimal)
 	if not value then return end
 	if(value > 999999999) then return self:Round(value/1000000000, decimal), "B" end
 	if(value > 999999) then return self:Round(value/1000000, decimal), "M" end
@@ -16,12 +16,12 @@ function WFI:ShortenNumber(value, decimal)
 	return value, ""
 end
 
-function WFI:FormatNumber(value, decimal, pattern)
+function Oken:FormatNumber(value, decimal, pattern)
 	if not value then return end
 	return (pattern or "%s%s"):format(self:ShortenNumber(value, decimal))
 end
 
-function WFI:GetClassColor(unit, components)
+function Oken:GetClassColor(unit, components)
 	local target_class = select(2, UnitClass(unit))
 	if target_class then
 		if components then
@@ -40,12 +40,12 @@ function WFI:GetClassColor(unit, components)
 end
 
 local icn_string = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_%d:%s|t"
-function WFI:Icon(index, align)
+function Oken:Icon(index, align)
 	if not index then return "" end
 	return icn_string:format(index, align or "0")
 end
 
-function WFI:Wrap(str, length)
+function Oken:Wrap(str, length)
 	local wrapped = ""
 	while true do
 		local a, b = str:match("(" .. ("."):rep(length) .. ")(.*)")
