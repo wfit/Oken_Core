@@ -560,7 +560,7 @@ end
 
 -- Draw a radius circle
 function Nameplates:DrawRadius(guid, radius)
-	return self:DrawCircle(guid, radius, radius < 15 and "Interface\\AddOns\\Oken_Core\\media\\radius_lg" or "Interface\\AddOns\\Oken_Core\\media\\radius")
+	return self:DrawCircle(guid, radius, radius < 80 and "Interface\\AddOns\\Oken_Core\\media\\radius_lg" or "Interface\\AddOns\\Oken_Core\\media\\radius")
 end
 
 -- Area of Effect
