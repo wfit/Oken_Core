@@ -26,6 +26,11 @@ Cooldowns:RegisterSpells("DRUID", {
 		alias = {77761, 106898}, -- Bear
 		spec = { SPEC_FERAL, SPEC_GUARDIAN }
 	},
+	[132469] = { -- Typhoon
+		cooldown = 30,
+		duration = 6,
+		talent = true
+	},
 
 	-- Balance
 	[78675] = { -- Solar Beam
