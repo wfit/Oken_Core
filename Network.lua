@@ -147,7 +147,11 @@ function Network:OnInitialize()
 	Oken:GetModule("Config"):Register("Versions", version_check, 13)
 
 	if self.settings.disabled then return end
-	RegisterAddonMessagePrefix("Oken")
+	if C_ChatInfo then -- XXX: Beta
+		C_ChatInfo.RegisterAddonMessagePrefix("Oken")
+	else
+		RegisterAddonMessagePrefix("Oken")
+	end
 end
 
 -- Broadcast version on enable
