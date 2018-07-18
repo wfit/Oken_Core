@@ -287,17 +287,6 @@ function Unit:HasTalentSpell(sid)
 	return false
 end
 
-function Unit:GetArtifactSpellRank(spellID)
-	local data = self.info.artifact
-	return (data and data[spellID]) or 0
-end
-
-function Unit:GetArtifactSpellEffect(spellID, zero, ...)
-	local rank = self:GetArtifactSpellRank(spellID)
-	if rank < 1 then return zero end
-	return select(rank, ...)
-end
-
 function Unit:HasLegendary(id)
 	return self.info.legendaries and self.info.legendaries[id] ~= nil
 end
@@ -773,7 +762,7 @@ do
 			end
 		end
 
-		if guid == UnitGUID("player") and unit.info.talents and unit.info.artifact and unit.info.legendaries then
+		if guid == UnitGUID("player") and unit.info.talents and unit.info.legendaries then
 			self:ScheduleCheck()
 		end
 	end

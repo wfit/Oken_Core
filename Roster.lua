@@ -2,7 +2,6 @@ local _, Oken = ...
 local Roster = Oken:RegisterModule("Roster", "AceTimer-3.0")
 
 local LGIST = LibStub:GetLibrary("LibGroupInSpecT-1.1")
-local LAD = LibStub:GetLibrary("LibArtifactData-1.0")
 
 -------------------------------------------------------------------------------
 -- Roster config
@@ -45,19 +44,10 @@ function Roster:OnInitialize()
 
 	self.group = {}
 	self.infos = {}
-	self.artifacts = {}
-	self.playerArtifact = nil
 	self.legendaries = {}
 
 	LGIST.RegisterCallback(self, "GroupInSpecT_Update", "RosterUpdate")
 	LGIST.RegisterCallback(self, "GroupInSpecT_Remove", "RosterRemove")
-
-	LAD.RegisterCallback(self, "ARTIFACT_ADDED", "ArtifactUpdate")
-	LAD.RegisterCallback(self, "ARTIFACT_ACTIVE_CHANGED", "ArtifactUpdate")
-	LAD.RegisterCallback(self, "ARTIFACT_KNOWLEDGE_CHANGED", "ArtifactUpdate")
-	LAD.RegisterCallback(self, "ARTIFACT_POWER_CHANGED", "ArtifactUpdate")
-	LAD.RegisterCallback(self, "ARTIFACT_RELIC_CHANGED", "ArtifactUpdate")
-	LAD.RegisterCallback(self, "ARTIFACT_TRAITS_CHANGED", "ArtifactUpdate")
 
 	self:RegisterMessage("OKEN_MSG_ROSTER_BROADCAST")
 	self:RegisterMessage("OKEN_MSG_ROSTER_REQUEST", "ScheduleBroadcast")
@@ -88,7 +78,7 @@ do
 	local function broadcast()
 		if IsInGroup() then
 			local guid = UnitGUID("player")
-			Oken:Send("ROSTER_BROADCAST", { guid, Roster.artifacts[guid], Roster.legendaries[guid] })
+			Oken:Send("ROSTER_BROADCAST", { guid, Roster.legendaries[guid] })
 		end
 	end
 
@@ -109,12 +99,10 @@ do
 
 	function Roster:OKEN_MSG_ROSTER_BROADCAST(_, data)
 		local guid = data[1]
-		local artifact = data[2]
-		local legendaries = data[3]
+		local legendaries = data[2]
 
 		if guid == UnitGUID("player") then return end
 
-		Roster.artifacts[guid] = artifact
 		Roster.legendaries[guid] = legendaries
 		Roster:SendMessage("OKEN_ROSTER_UPDATE", guid, Roster:GetUnit(guid), Roster:GetInfo(guid))
 	end
@@ -229,67 +217,8 @@ end
 function Roster:GetInfo(guid)
 	local info = self.infos[guid]
 	if not info then return end
-	info.artifact = self.artifacts[guid]
 	info.legendaries = self.legendaries[guid]
 	return info
-end
-
-function Roster:HasArtifactInfo(guid)
-	return not not self.artifacts[guid]
-end
-
-function Roster:PlayerArtifactData()
-	return self.playerArtifact
-end
-
---------------------------------------------------------------------------------
-
-do
-	local function rebuild()
-		local guid = UnitGUID("player")
-
-		local data = LAD:GetAllArtifactsInfo()
-		local activeID = LAD:GetActiveArtifactID()
-
-		Roster.playerArtifact = Oken:Clone(data)
-		Roster.playerArtifact.active = activeID
-
-		if activeID and data[activeID] then
-			local traits = {}
-
-			for i, trait in ipairs(data[activeID].traits) do
-				if trait.currentRank > 0 then
-					traits[trait.spellID] = trait.currentRank
-				end
-			end
-
-			data = traits
-		else
-			data = nil
-		end
-
-		Roster.artifacts[guid] = data
-		Roster:SendMessage("OKEN_ROSTER_UPDATE", guid, "player", Roster:GetInfo(guid))
-		Roster:ScheduleBroadcast()
-		Roster:SendMessage("OKEN_ROSTER_ARTIFACT_REBUILT")
-	end
-
-	local rebuild_pending = false
-
-	function Roster:ScheduleArtifactRebuild()
-		if not rebuild_pending then
-			rebuild_pending = true
-			C_Timer.After(0.5, function()
-				rebuild()
-				rebuild_pending = false
-			end)
-		end
-	end
-
-	function Roster:ArtifactUpdate(tpe, ...)
-		self:SendMessage("OKEN_ROSTER_" .. tpe, ...)
-		self:ScheduleArtifactRebuild()
-	end
 end
 
 --------------------------------------------------------------------------------
@@ -342,6 +271,5 @@ end
 function Roster:RosterRemove(_, guid)
 	self.group[guid] = nil
 	self.infos[guid] = nil
-	self.artifacts[guid] = nil
 	self:SendMessage("OKEN_ROSTER_LEFT", guid)
 end

@@ -11,11 +11,6 @@ local function InnerPeace(unit) return unit:HasTalentSpell(197073) and 60 or 0 e
 local function Stonebark(unit) return unit:HasTalentSpell(197061) and 30 or 0 end
 local function SurvivalOfTheFittest(unit) return unit:HasTalentSpell(203965) and 2/3 or 1 end
 
-local function HonedInstincts(unit) return unit:GetArtifactSpellRank(210557) * 1 end
-local function LightOfTheSun(unit) return unit:GetArtifactSpellRank(202918) * 15 end
-local function PerpetualSpring(unit) return 1 - unit:GetArtifactSpellRank(200402) * 0.03 end
-local function UrsocsEndurance(unit) return unit:GetArtifactSpellRank(200399) * 0.5 end
-
 local function DualDeterminationCharges(unit) return unit:HasLegendary(137041) and 1 or 0 end
 local function DualDeterminationCooldown(unit) return unit:HasLegendary(137041) and 1.15 or 1 end
 
@@ -46,14 +41,14 @@ Cooldowns:RegisterSpells("DRUID", {
 		spec = SPEC_GUARDIAN
 	},
 	[22812] = { -- Barkskin
-		cooldown = function(unit) return 90 * PerpetualSpring(unit) * SurvivalOfTheFittest(unit) end,
-		duration = function(unit) return 12 + UrsocsEndurance(unit) end,
+		cooldown = function(unit) return 90 * SurvivalOfTheFittest(unit) end,
+		duration = function(unit) return 12 end,
 		duration = 12,
 		spec = SPEC_GUARDIAN
 	},
 	[61336] = { -- Survival Instinct
 		cooldown = function(unit) return 240 * SurvivalOfTheFittest(unit) / DualDeterminationCooldown(unit) end,
-		duration = function(unit) return 6 + HonedInstincts(unit) end,
+		duration = function(unit) return 6 end,
 		charges = function(unit) return 2 + DualDeterminationCharges(unit) end,
 		spec = SPEC_GUARDIAN
 	},
