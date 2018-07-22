@@ -45,7 +45,7 @@ Cooldowns:RegisterSpells("PRIEST", {
 		spec = SPEC_SHADOW
 	},
 	[47585] = { -- Dispersion
-		cooldown = function(unit) return 120 - FromTheShadows(unit) end,
+		cooldown = function(unit) return 120 end,
 		duration = 6,
 		spec = SPEC_SHADOW
 	},
