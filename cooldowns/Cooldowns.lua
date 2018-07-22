@@ -840,7 +840,8 @@ do
 		end
 	end
 
-	function Cooldowns:COMBAT_LOG_EVENT_UNFILTERED(_, _, event, _, source, _, _, _, target, _, _, _, spell)
+	function Cooldowns:COMBAT_LOG_EVENT_UNFILTERED()
+		local  _, event, _, source, _, _, _, target, _, _, _, spell = CombatLogGetCurrentEventInfo()
 		if event == "SPELL_CAST_SUCCESS" then SpellCasted(source, target, spell, true) end
 	end
 
