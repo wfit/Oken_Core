@@ -8,15 +8,6 @@ local SPEC_RETRIBUTION  = 70
 local function UnbreakableSpirit(unit) return unit:HasTalentSpell(114154) and 0.7 or 1 end
 local function DivineIntervention(unit) return unit:HasTalentSpell(213313) and 0.8 or 1 end
 
-local function UthersGuard(unit) return unit:HasLegendary(137105) and 1.5 or 1 end
-local function TyrsHandOfFaith(unit) return unit:HasLegendary(137059) and 0.3 or 1 end
-
-local function HandDuration(base)
-	return function(unit)
-		return base * UthersGuard(unit)
-	end
-end
-
 Cooldowns:RegisterSpells("PALADIN", {
 	[642] = { -- Divine Shield
 		cooldown = function(unit) return 300 * UnbreakableSpirit(unit) * DivineIntervention(unit) end,
@@ -24,24 +15,22 @@ Cooldowns:RegisterSpells("PALADIN", {
 	},
 	[633] = { -- Lay on Hands
 		cooldown = function(unit)
-			return 600 * UnbreakableSpirit(unit) * TyrsHandOfFaith(unit)
+			return 600 * UnbreakableSpirit(unit)
 		end
 	},
 	[1044] = { -- Blessing of Freedom
-		cooldown = function(unit)
-			return 25
-		end,
-		duration = HandDuration(8)
+		cooldown = 25,
+		duration = 8
 	},
 	[1022] = { -- Blessing of Protection
-		cooldown = function(unit) return 300 end,
-		duration = HandDuration(10),
+		cooldown = 300,
+		duration = 10,
 		icon = 135964,
 		available = function(unit) return not unit:HasTalent(22433) end
 	},
 	[6940] = { -- Blessing of Sacrifice
-		cooldown = function(unit) return 150 end,
-		duration = HandDuration(12),
+		cooldown = 120,
+		duration = 12,
 		spec = { SPEC_HOLY, SPEC_PROTECTION }
 	},
 
@@ -53,13 +42,13 @@ Cooldowns:RegisterSpells("PALADIN", {
 	},
 	[31821] = { -- Aura Mastery
 		cooldown = 180,
-		duration = function(unit) return 6 end,
+		duration = 6,
 		spec = SPEC_HOLY
 	},
 	[498] = {
 		-- Divine Protection
 		cooldown = function(unit) return 60 * UnbreakableSpirit(unit) end,
-		duration = function(unit) return 8 end,
+		duration = 8,
 		icon = 524353,
 		spec = SPEC_HOLY
 	},
@@ -71,7 +60,7 @@ Cooldowns:RegisterSpells("PALADIN", {
 		spec = SPEC_PROTECTION
 	},
 	[31850] = { -- Ardent Defender
-		cooldown = function(unit) return 120 end,
+		cooldown = 120,
 		duration = 8,
 		spec = SPEC_PROTECTION
 	},

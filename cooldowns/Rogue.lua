@@ -11,7 +11,7 @@ Cooldowns:RegisterSpells("ROGUE", {
 		duration = 5
 	},
 	[31224] = { -- Clock of Shadows
-		cooldown = function(unit) return 90 end,
+		cooldown = 90,
 		duration = 5
 	},
 	[5277] = { -- Evasion

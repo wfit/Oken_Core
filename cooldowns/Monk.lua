@@ -9,7 +9,7 @@ local function FundamentalObservation(unit) return unit:HasLegendary(137063) and
 
 Cooldowns:RegisterSpells("MONK", {
 	[119996] = { -- Transcendence: Transert
-		cooldown = 25
+		cooldown = 45
 	},
 
 	-- Brewmaster
